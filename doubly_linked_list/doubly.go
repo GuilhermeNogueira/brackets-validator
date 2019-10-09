@@ -22,6 +22,14 @@ type DoublyLinkedList interface {
 	AddLast(interface{})
 	RemoveFirst() (*interface{}, error)
 	RemoveLast() (*interface{}, error)
+	Reverse() error
+	String() string
+	Insert(interface{}, int) bool
+	RemoveAt(int) (*interface{}, error)
+	IndexOf(interface{}) int
+	Head() *interface{}
+	Tail() *interface{}
+	GetAt(int) *interface{}
 }
 
 type DoublyLinkedListImpl struct {
@@ -30,8 +38,40 @@ type DoublyLinkedListImpl struct {
 	size int
 }
 
-func NewDoublyLinkedList() *DoublyLinkedListImpl {
+func NewDoublyLinkedList() DoublyLinkedList {
 	return &DoublyLinkedListImpl{}
+}
+
+func (d *DoublyLinkedListImpl) GetAt(int) *interface{} {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) Reverse() error {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) String() string {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) Insert(interface{}, int) bool {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) RemoveAt(int) (*interface{}, error) {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) IndexOf(interface{}) int {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) Head() *interface{} {
+	panic("implement me")
+}
+
+func (d *DoublyLinkedListImpl) Tail() *interface{} {
+	panic("implement me")
 }
 
 func (d *DoublyLinkedListImpl) Size() int {
