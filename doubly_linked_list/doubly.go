@@ -18,8 +18,8 @@ func NewNode(element interface{}, next *Node, prev *Node) *Node {
 type DoublyLinkedList interface {
 	Size() int
 	IsEmpty() bool
-	AddFirst(*interface{})
-	AddLast(*interface{})
+	AddFirst(interface{})
+	AddLast(interface{})
 	RemoveFirst() (*interface{}, error)
 	RemoveLast() (*interface{}, error)
 }
@@ -30,6 +30,10 @@ type DoublyLinkedListImpl struct {
 	size int
 }
 
+func NewDoublyLinkedList() *DoublyLinkedListImpl {
+	return &DoublyLinkedListImpl{}
+}
+
 func (d *DoublyLinkedListImpl) Size() int {
 	return d.size
 }
@@ -38,7 +42,7 @@ func (d *DoublyLinkedListImpl) IsEmpty() bool {
 	return d.size == 0
 }
 
-func (d *DoublyLinkedListImpl) AddFirst(val *interface{}) {
+func (d *DoublyLinkedListImpl) AddFirst(val interface{}) {
 	tmpNode := NewNode(val, d.head, nil)
 	if d.head != nil {
 		d.head.prev = tmpNode
@@ -48,10 +52,10 @@ func (d *DoublyLinkedListImpl) AddFirst(val *interface{}) {
 		d.tail = tmpNode
 	}
 	d.size++
-	logs.Infof("Element %s added", val)
+	logs.Infof("Element %v added", val)
 }
 
-func (d *DoublyLinkedListImpl) AddLast(val *interface{}) {
+func (d *DoublyLinkedListImpl) AddLast(val interface{}) {
 	tmpNode := NewNode(val, nil, d.tail)
 	if d.tail != nil {
 		d.tail.next = tmpNode
@@ -87,8 +91,4 @@ func (d *DoublyLinkedListImpl) RemoveLast() (*interface{}, error) {
 
 	logs.Info("Last item removed")
 	return &tmpNode.element, nil
-}
-
-func NewDoublyLinkedListImpl(head *Node, tail *Node, size int) *DoublyLinkedListImpl {
-	return &DoublyLinkedListImpl{head: head, tail: tail, size: size}
 }
