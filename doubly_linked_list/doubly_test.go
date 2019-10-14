@@ -6,17 +6,17 @@ import (
 
 func TestShouldGetCorrectSize(t *testing.T) {
 	list := NewDoublyLinkedList()
-	if list.size != 0 {
+	if list.Size() != 0 {
 		t.Error("Initial size is not zero")
 	}
 
 	list.AddFirst(1)
 
-	if list.size != 1 {
+	if list.Size() != 1 {
 		t.Error("List size should be 1")
 	}
 
-	listSize := list.size
+	listSize := list.Size()
 
 	i := 0
 	for i <= 5 {
@@ -24,7 +24,7 @@ func TestShouldGetCorrectSize(t *testing.T) {
 		i++
 	}
 
-	if s := list.size; s != listSize+i {
+	if s := list.Size(); s != listSize+i {
 		t.Errorf("List size is not %v", listSize+i)
 	}
 
@@ -36,7 +36,7 @@ func TestShouldAddWhenListIsEmpty(t *testing.T) {
 
 	list.AddFirst("abc")
 
-	if list.size != 1 {
+	if list.Size() != 1 {
 		t.Error("Item not added correctly")
 	}
 
@@ -44,7 +44,7 @@ func TestShouldAddWhenListIsEmpty(t *testing.T) {
 
 	list.AddLast("abc")
 
-	if list.size != 1 {
+	if list.Size() != 1 {
 		t.Error("Item not added correctly")
 	}
 }
@@ -53,5 +53,30 @@ func TestShouldBeEmpty(t *testing.T) {
 	list := NewDoublyLinkedList()
 	if s := list.IsEmpty(); s == false {
 		t.Error("List should be empty")
+	}
+}
+
+func TestDoublyLinkedListImpl_IndexOf(t *testing.T) {
+	list := NewDoublyLinkedList()
+	a := "A"
+	list.AddLast(a)
+	b := "B"
+	list.AddLast(b)
+	c := "C"
+	list.AddLast(c)
+
+	if list.IndexOf(a) != 0 {
+		t.Error("Index should be 0 ")
+	}
+
+	if list.IndexOf(b) != 1 {
+		t.Error("Index should be 1 ")
+	}
+	if list.IndexOf(c) != 2 {
+		t.Error("Index should be 2 ")
+	}
+
+	if list.IndexOf("z") != -1 {
+		t.Error("Index should be -1 ")
 	}
 }

@@ -2,19 +2,27 @@ package doubly_linked_list
 
 import (
 	"errors"
+	"fmt"
 	"github.com/pedidosya/peya-go/logs"
 )
 
 type Node struct {
-	element interface{}
+	element *interface{}
 	next    *Node
 	prev    *Node
 }
 
-func NewNode(element interface{}, next *Node, prev *Node) *Node {
+func NewNode(element *interface{}, next *Node, prev *Node) *Node {
 	return &Node{element: element, next: next, prev: prev}
 }
 
+//DoublyLinkedList
+/*
+	TODO:
+		- Add concurrency support
+		- Change interface to generic
+
+*/
 type DoublyLinkedList interface {
 	Size() int
 	IsEmpty() bool
@@ -29,7 +37,6 @@ type DoublyLinkedList interface {
 	IndexOf(interface{}) int
 	Head() *interface{}
 	Tail() *interface{}
-	GetAt(int) *interface{}
 }
 
 type DoublyLinkedListImpl struct {
@@ -42,8 +49,48 @@ func NewDoublyLinkedList() DoublyLinkedList {
 	return &DoublyLinkedListImpl{}
 }
 
-func (d *DoublyLinkedListImpl) GetAt(int) *interface{} {
-	panic("implement me")
+func (d *DoublyLinkedListImpl) getNodeAt(pos int) (*Node, error) {
+
+	//If wanted position is greater than our size, return nil
+	if pos < 0 || pos >= d.size {
+		return nil, fmt.Errorf("index out of bounds")
+	}
+
+	node := *d.head
+
+	if pos < d.size/2 {
+		for i := 0; i != pos; i++ {
+			node = *node.next
+		}
+	} else {
+		for i := d.size - 1; i != pos; i++ {
+			node = *node.prev
+		}
+	}
+
+	return &node, nil
+}
+
+func (d *DoublyLinkedListImpl) remove(node Node) *interface{} {
+	if node.prev == nil {
+		elem, _ := d.RemoveFirst()
+		return elem
+	}
+
+	if node.next == nil {
+		elem, _ := d.RemoveLast()
+		return elem
+	}
+
+	node.prev.next = node.next
+	node.next.prev = node.prev
+
+	d.size--
+
+	node.next = nil
+	node.prev = nil
+
+	return node.element
 }
 
 func (d *DoublyLinkedListImpl) Reverse() error {
@@ -54,24 +101,41 @@ func (d *DoublyLinkedListImpl) String() string {
 	panic("implement me")
 }
 
-func (d *DoublyLinkedListImpl) Insert(interface{}, int) bool {
+func (d *DoublyLinkedListImpl) Insert(val interface{}, pos int) bool {
 	panic("implement me")
 }
 
-func (d *DoublyLinkedListImpl) RemoveAt(int) (*interface{}, error) {
-	panic("implement me")
+func (d *DoublyLinkedListImpl) RemoveAt(pos int) (*interface{}, error) {
+	node, e := d.getNodeAt(pos)
+
+	if e != nil {
+		return nil, e
+	}
+
+	remove := d.remove(*node)
+
+	return remove, nil
 }
 
-func (d *DoublyLinkedListImpl) IndexOf(interface{}) int {
-	panic("implement me")
+func (d *DoublyLinkedListImpl) IndexOf(elem interface{}) int {
+	node := d.head
+	index := 0
+	for node != nil {
+		if *node.element == elem {
+			return index
+		}
+		index++
+		node = node.next
+	}
+	return -1
 }
 
 func (d *DoublyLinkedListImpl) Head() *interface{} {
-	panic("implement me")
+	return d.head.element
 }
 
 func (d *DoublyLinkedListImpl) Tail() *interface{} {
-	panic("implement me")
+	return d.tail.element
 }
 
 func (d *DoublyLinkedListImpl) Size() int {
@@ -83,7 +147,7 @@ func (d *DoublyLinkedListImpl) IsEmpty() bool {
 }
 
 func (d *DoublyLinkedListImpl) AddFirst(val interface{}) {
-	tmpNode := NewNode(val, d.head, nil)
+	tmpNode := NewNode(&val, d.head, nil)
 	if d.head != nil {
 		d.head.prev = tmpNode
 	}
@@ -96,7 +160,7 @@ func (d *DoublyLinkedListImpl) AddFirst(val interface{}) {
 }
 
 func (d *DoublyLinkedListImpl) AddLast(val interface{}) {
-	tmpNode := NewNode(val, nil, d.tail)
+	tmpNode := NewNode(&val, nil, d.tail)
 	if d.tail != nil {
 		d.tail.next = tmpNode
 	}
@@ -117,7 +181,7 @@ func (d *DoublyLinkedListImpl) RemoveFirst() (*interface{}, error) {
 	d.head.prev = nil
 	d.size--
 	logs.Info("First item removed")
-	return &tmpNode.element, nil
+	return tmpNode.element, nil
 }
 
 func (d *DoublyLinkedListImpl) RemoveLast() (*interface{}, error) {
@@ -130,5 +194,5 @@ func (d *DoublyLinkedListImpl) RemoveLast() (*interface{}, error) {
 	d.size--
 
 	logs.Info("Last item removed")
-	return &tmpNode.element, nil
+	return tmpNode.element, nil
 }
