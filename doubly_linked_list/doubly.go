@@ -30,7 +30,6 @@ type DoublyLinkedList interface {
 	AddLast(interface{})
 	RemoveFirst() (*interface{}, error)
 	RemoveLast() (*interface{}, error)
-	Reverse() error
 	String() string
 	Insert(interface{}, int) bool
 	RemoveAt(int) (*interface{}, error)
@@ -56,14 +55,16 @@ func (d *DoublyLinkedListImpl) getNodeAt(pos int) (*Node, error) {
 		return nil, fmt.Errorf("index out of bounds")
 	}
 
-	node := *d.head
+	node := Node{}
 
 	if pos < d.size/2 {
+		node = *d.head
 		for i := 0; i != pos; i++ {
 			node = *node.next
 		}
 	} else {
-		for i := d.size - 1; i != pos; i++ {
+		node = *d.tail
+		for i := d.size - 1; i != pos; i-- {
 			node = *node.prev
 		}
 	}
@@ -93,16 +94,41 @@ func (d *DoublyLinkedListImpl) remove(node Node) *interface{} {
 	return node.element
 }
 
-func (d *DoublyLinkedListImpl) Reverse() error {
-	panic("implement me")
+func (d *DoublyLinkedListImpl) String() string {
+	return str(d.head, nil)
 }
 
-func (d *DoublyLinkedListImpl) String() string {
-	panic("implement me")
+func str(node *Node, val *string) string {
+	if node == nil {
+		return *val
+	}
+
+	nextVal := fmt.Sprintf("%v", *node.element)
+
+	if val != nil {
+		nextVal = fmt.Sprintf("%v -> %v", *val, nextVal)
+	}
+
+	return str(node.next, &nextVal)
 }
 
 func (d *DoublyLinkedListImpl) Insert(val interface{}, pos int) bool {
-	panic("implement me")
+	if pos > d.size-1 {
+		return false
+	}
+
+	node, e := d.getNodeAt(pos)
+
+	if e != nil {
+		return false
+	}
+
+	newNode := NewNode(&val, node, node.prev)
+
+	node.prev.next = newNode
+	node.prev = newNode
+
+	return true
 }
 
 func (d *DoublyLinkedListImpl) RemoveAt(pos int) (*interface{}, error) {

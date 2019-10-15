@@ -80,3 +80,37 @@ func TestDoublyLinkedListImpl_IndexOf(t *testing.T) {
 		t.Error("Index should be -1 ")
 	}
 }
+
+func TestDoublyLinkedListImpl_Insert(t *testing.T) {
+	list := NewDoublyLinkedList()
+
+	item := "ITEM"
+	list.AddLast("A")
+	list.AddLast("B")
+	list.AddLast("C")
+
+	list.Insert(item, 1)
+
+	index := list.IndexOf(item)
+
+	if index != 1 {
+		t.Error("Index should be 1")
+	}
+}
+
+func TestDoublyLinkedListImpl_String(t *testing.T) {
+
+	list := NewDoublyLinkedList()
+	list.AddLast("A")
+	list.AddLast("B")
+	list.AddLast("C")
+
+	s := list.String()
+
+	expected := "A -> B -> C"
+
+	if s != expected {
+		t.Errorf("%v should be %v", s, expected)
+	}
+
+}
