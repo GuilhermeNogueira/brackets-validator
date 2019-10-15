@@ -57,13 +57,10 @@ func TestShouldBeEmpty(t *testing.T) {
 }
 
 func TestDoublyLinkedListImpl_IndexOf(t *testing.T) {
-	list := NewDoublyLinkedList()
+	list := newDefaultList()
 	a := "A"
-	list.AddLast(a)
 	b := "B"
-	list.AddLast(b)
 	c := "C"
-	list.AddLast(c)
 
 	if list.IndexOf(a) != 0 {
 		t.Error("Index should be 0 ")
@@ -82,12 +79,9 @@ func TestDoublyLinkedListImpl_IndexOf(t *testing.T) {
 }
 
 func TestDoublyLinkedListImpl_Insert(t *testing.T) {
-	list := NewDoublyLinkedList()
+	list := newDefaultList()
 
 	item := "ITEM"
-	list.AddLast("A")
-	list.AddLast("B")
-	list.AddLast("C")
 
 	list.Insert(item, 1)
 
@@ -100,10 +94,7 @@ func TestDoublyLinkedListImpl_Insert(t *testing.T) {
 
 func TestDoublyLinkedListImpl_String(t *testing.T) {
 
-	list := NewDoublyLinkedList()
-	list.AddLast("A")
-	list.AddLast("B")
-	list.AddLast("C")
+	list := newDefaultList()
 
 	s := list.String()
 
@@ -112,5 +103,25 @@ func TestDoublyLinkedListImpl_String(t *testing.T) {
 	if s != expected {
 		t.Errorf("%v should be %v", s, expected)
 	}
+}
 
+func TestDoublyLinkedListImpl_RemoveAt(t *testing.T) {
+	list := newDefaultList()
+	at, _ := list.RemoveAt(1)
+
+	if *at != "B" {
+		t.Error("Remove fail")
+	}
+
+	if list.Size() != 2 {
+		t.Error("List sie should be 2")
+	}
+}
+
+func newDefaultList() DoublyLinkedList {
+	list := NewDoublyLinkedList()
+	list.AddLast("A")
+	list.AddLast("B")
+	list.AddLast("C")
+	return list
 }
